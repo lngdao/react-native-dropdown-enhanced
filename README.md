@@ -14,7 +14,7 @@ A simply **dropdown** | **selected** | **picker** | **combine searchable** for r
 
 ## Demo
 
-#### Code provided in `Examples folder`.
+Code provided in **Example** folder.
 
 ## Usage
 
