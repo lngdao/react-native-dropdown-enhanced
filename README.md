@@ -28,25 +28,34 @@ const data: Selected[] =
 { label: 'Da Lat', value: 14 },
 { label: 'Thanh Hoa', value: 15 }]
 const App = () => {
-	return (
-		<SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
-			<Dropdown data={data} defaultValue={14} />
-		</SafeAreaView>
-	)} 
+return (
+    <SafeAreaView
+      style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+      <Dropdown
+        data={data}
+        defaultValue={14}
+        onSelectedChange={({label, value}) => console.log(label)}
+      />
+    </SafeAreaView>
+  )}
 ```
+
 #### Combine search
 
 ```  
 const App = () => {
-	return (
-		<SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
-			<Dropdown
-				data={data}
-				defaultValue={14}
-				searchCombine
-			/>
-		</SafeAreaView>
-	)} 
+  return (
+    <SafeAreaView
+      style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+      <Dropdown
+        data={data}
+        defaultValue={14}
+        onSelectedChange={({label, value}) => console.log(label)}
+        searchCombine
+      />
+    </SafeAreaView>
+  );
+};
 ```
 
 ## Props
