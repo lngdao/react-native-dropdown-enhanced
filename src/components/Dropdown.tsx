@@ -17,9 +17,12 @@ import {
 
 export interface DropdownProps {
   data: Array<Selected>;
-  defaultValue?: number;
+  defaultValue?: number | string;
   onSelectedChange?: (selected: Selected) => void;
   style?: StyleProp<ViewStyle>;
+  defaultLabel?: string;
+  itemStyle?: StyleProp<ViewStyle>;
+  itemTextStyle?: StyleProp<TextStyle>;
   dropdownStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   searchStyle?: StyleProp<TextStyle>;
@@ -38,7 +41,7 @@ type ContainerDimension = {
 
 export type Selected = {
   label: string;
-  value: number;
+  value: number | string;
 };
 
 const SPACING = 10;
@@ -54,14 +57,17 @@ const Dropdown = (props: DropdownProps) => {
     dropdownStyle,
     searchable,
     searchStyle,
+    defaultLabel = 'All',
+    itemStyle,
+    itemTextStyle,
     searchPlaceholder = 'Type here',
     activeTextColor = 'orange',
     inactiveTextColor = 'black',
   } = props;
 
   const [selected, setSelected] = useState<Selected>({
-    label: data[0].label,
-    value: data[0].value,
+    label: defaultLabel,
+    value: '',
   });
   const [dataDropdown, setDataDropdown] = useState<Array<Selected>>(data);
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
@@ -131,14 +137,17 @@ const Dropdown = (props: DropdownProps) => {
     index: number;
   }) => {
     const dropdownItemView = (
-      <View style={styles.dropdownItem}>
+      <View style={[styles.dropdownItem, itemStyle]}>
         <Text
-          style={{
-            color:
-              selected.value == item.value
-                ? activeTextColor
-                : inactiveTextColor,
-          }}
+          style={[
+            {
+              color:
+                selected.value == item.value
+                  ? activeTextColor
+                  : inactiveTextColor,
+            },
+            itemTextStyle,
+          ]}
           children={item.label}
         />
       </View>
@@ -246,7 +255,7 @@ const Dropdown = (props: DropdownProps) => {
   );
 
   return (
-    <View style={{ zIndex: 5 }}>
+    <View style={{ zIndex: 5, overflow: 'visible' }}>
       <TouchableWithoutFeedback
         onPress={toggleDropdown}
         children={containerView()}
@@ -281,6 +290,7 @@ const styles = StyleSheet.create({
     paddingRight: SPACING,
   },
   dropdown: {
+    zIndex: 20,
     position: 'absolute',
     borderRadius: 5,
     maxHeight: 200,
