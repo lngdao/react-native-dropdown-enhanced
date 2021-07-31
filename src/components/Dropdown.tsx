@@ -249,6 +249,7 @@ const Dropdown = (props: DropdownProps) => {
           renderItem={renderDropdownItem}
           keyExtractor={(_, index) => `${index}`}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
+          scrollEventThrottle={16}
         />
       }
     />
