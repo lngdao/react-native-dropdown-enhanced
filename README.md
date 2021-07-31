@@ -19,7 +19,8 @@ A simply **dropdown** | **selected** | **picker** | **combine searchable** for r
 ## Usage
 
 #### Simple usage
-```  
+
+```
 const data: Selected[] = [
   {label: 'Ha Noi', value: 10},
   {label: 'Ho Chi Minh', value: 11},
@@ -45,7 +46,7 @@ return (
 
 #### Combine search
 
-```  
+```
 const App = () => {
   return (
     <SafeAreaView
@@ -54,7 +55,7 @@ const App = () => {
         data={data}
         defaultValue={14}
         onSelectedChange={({label, value}) => console.log(label)}
-        searchCombine
+        searchable
       />
     </SafeAreaView>
   );
@@ -63,7 +64,7 @@ const App = () => {
 
 ## Props
 
-#### Updating...
+Updating...
 
 ## License
 

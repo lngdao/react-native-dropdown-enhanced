@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { useState, useEffect, useRef } from 'react'
+import * as React from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,35 +13,36 @@ import {
   Image,
   FlatList,
   TouchableWithoutFeedback,
-} from 'react-native'
+} from 'react-native';
 
 export interface DropdownProps {
-  data: Array<Selected>
-  defaultValue?: number
-  onSelectedChange?: (selected: Selected) => void
-  style?: StyleProp<ViewStyle>
-  labelStyle?: StyleProp<TextStyle>
-  searchStyle?: StyleProp<TextStyle>
-  searchCombine?: boolean
-  searchPlaceholder?: string
-  activeTextColor?: string
-  inactiveTextColor?: string
+  data: Array<Selected>;
+  defaultValue?: number;
+  onSelectedChange?: (selected: Selected) => void;
+  style?: StyleProp<ViewStyle>;
+  dropdownStyle?: StyleProp<ViewStyle>;
+  labelStyle?: StyleProp<TextStyle>;
+  searchStyle?: StyleProp<TextStyle>;
+  searchable?: boolean;
+  searchPlaceholder?: string;
+  activeTextColor?: string;
+  inactiveTextColor?: string;
 }
 
 type ContainerDimension = {
-  width: number
-  height: number
-  px: number
-  py: number
-}
+  width: number;
+  height: number;
+  px: number;
+  py: number;
+};
 
 export type Selected = {
-  label: string
-  value: number
-}
+  label: string;
+  value: number;
+};
 
-const SPACING = 10
-const DEFAULT_VALUE = 0
+const SPACING = 10;
+const DEFAULT_VALUE = 0;
 
 const Dropdown = (props: DropdownProps) => {
   const {
@@ -50,85 +51,84 @@ const Dropdown = (props: DropdownProps) => {
     onSelectedChange,
     style,
     labelStyle,
-    searchCombine,
+    dropdownStyle,
+    searchable,
     searchStyle,
     searchPlaceholder = 'Type here',
     activeTextColor = 'orange',
     inactiveTextColor = 'black',
-  } = props
+  } = props;
 
   const [selected, setSelected] = useState<Selected>({
-    label: data[DEFAULT_VALUE].label,
-    value: data[DEFAULT_VALUE].value,
-  })
-  const [dataDropdown, setDataDropdown] = useState<Array<Selected>>(data)
-  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false)
+    label: data[0].label,
+    value: data[0].value,
+  });
+  const [dataDropdown, setDataDropdown] = useState<Array<Selected>>(data);
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [containerDimension, setContainerDimension] =
     React.useState<ContainerDimension>({
       width: DEFAULT_VALUE,
       height: DEFAULT_VALUE,
       px: DEFAULT_VALUE,
       py: DEFAULT_VALUE,
-    })
-  const [isSearchActive, setIsSearchActive] = useState<boolean>(false)
-  const [textSearch, setTextSearch] = useState<string>(
-    data[DEFAULT_VALUE].label
-  )
-  const containerRef = useRef<View>(null)
-  const inputRef = useRef<TextInput>(null)
+    });
+  const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
+  const [textSearch, setTextSearch] = useState<string>(data[0].label);
+  const containerRef = useRef<View>(null);
+  const inputRef = useRef<TextInput>(null);
 
   const handleOnLayout = () => {
     containerRef.current?.measure((fx, fy, width, height, px, py) => {
-      console.log(fx, fy, width, height, px, py)
+      console.log(fx, fy, width, height, px, py);
       setContainerDimension((prev) => ({
         ...prev,
         width,
         height,
         px,
         py,
-      }))
-    })
-  }
+      }));
+    });
+  };
 
   const toggleDropdown = () => {
-    if (searchCombine) {
-      setTextSearch(selected.label)
-      setIsSearchActive(!dropdownVisible)
+    if (searchable) {
+      setTextSearch(selected.label);
+      setIsSearchActive(!dropdownVisible);
     }
-    setDropdownVisible((prev) => !prev)
-  }
+    setDropdownVisible((prev) => !prev);
+  };
 
   const onSearch = (text: string) => {
-    setTextSearch(text)
-    var matchingData = data.filter((item) => item.label.search(text) != -1)
-    setDataDropdown(matchingData)
-  }
+    setTextSearch(text);
+    var matchingData = data.filter((item) => item.label.search(text) != -1);
+    setDataDropdown(matchingData);
+  };
 
   const checkDefaultValue = () => {
     if (defaultValue) {
-      let target = data.find((item) => item.value == defaultValue)
+      let target = data.find((item) => item.value == defaultValue);
 
       if (target) {
         setSelected((prev) => ({
           ...prev,
           label: target!.label,
           value: defaultValue,
-        }))
+        }));
       }
     }
-  }
+  };
 
   useEffect(() => {
     // check default value
-    checkDefaultValue()
-  }, [])
+    checkDefaultValue();
+  }, []);
 
   const renderDropdownItem = ({
     item,
     index,
   }: {
-    item: Selected
-    index: number
+    item: Selected;
+    index: number;
   }) => {
     const dropdownItemView = (
       <View style={styles.dropdownItem}>
@@ -142,25 +142,25 @@ const Dropdown = (props: DropdownProps) => {
           children={item.label}
         />
       </View>
-    )
+    );
 
     return (
       <TouchableOpacity
         onPress={() => {
-          toggleDropdown()
-          setSelected(item)
-          !!onSelectedChange && onSelectedChange(item)
-          searchCombine && setIsSearchActive(false)
-          searchCombine && setDataDropdown(data)
+          toggleDropdown();
+          setSelected(item);
+          !!onSelectedChange && onSelectedChange(item);
+          searchable && setIsSearchActive(false);
+          searchable && setDataDropdown(data);
         }}
         children={dropdownItemView}
       />
-    )
-  }
+    );
+  };
 
   const containerView = () => {
     const containerChild =
-      searchCombine && isSearchActive ? (
+      searchable && isSearchActive ? (
         <TextInput
           ref={inputRef}
           value={textSearch}
@@ -176,7 +176,7 @@ const Dropdown = (props: DropdownProps) => {
           numberOfLines={1}
           children={selected.label}
         />
-      )
+      );
 
     return (
       <View
@@ -193,11 +193,11 @@ const Dropdown = (props: DropdownProps) => {
           source={require('../assets/ic_arrow_down.png')}
         />
       </View>
-    )
-  }
+    );
+  };
 
   const dropdownWrapper = (cpn: JSX.Element) => {
-    return !searchCombine ? (
+    return !searchable ? (
       <Modal
         visible={dropdownVisible}
         transparent
@@ -215,8 +215,8 @@ const Dropdown = (props: DropdownProps) => {
       </Modal>
     ) : (
       cpn
-    )
-  }
+    );
+  };
 
   const renderDropdown = () => (
     <View
@@ -227,11 +227,12 @@ const Dropdown = (props: DropdownProps) => {
           top:
             containerDimension.height +
             5 +
-            (!searchCombine ? containerDimension.py : 0),
-          left: !searchCombine ? containerDimension.px : 0,
+            (!searchable ? containerDimension.py : 0),
+          left: !searchable ? containerDimension.px : 0,
           width: containerDimension.width,
           opacity: dropdownVisible ? 1 : 0,
         },
+        dropdownStyle,
       ]}
       children={
         <FlatList
@@ -242,7 +243,7 @@ const Dropdown = (props: DropdownProps) => {
         />
       }
     />
-  )
+  );
 
   return (
     <View style={{ zIndex: 5 }}>
@@ -252,8 +253,8 @@ const Dropdown = (props: DropdownProps) => {
       />
       {dropdownWrapper(renderDropdown())}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -302,6 +303,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#CED4DA',
     marginHorizontal: SPACING,
   },
-})
+});
 
-export default Dropdown
+export default Dropdown;
