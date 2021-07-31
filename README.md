@@ -27,6 +27,7 @@ const data: Selected[] =
 { label: 'Da Nang', value: 13 },
 { label: 'Da Lat', value: 14 },
 { label: 'Thanh Hoa', value: 15 }]
+
 const App = () => {
 return (
     <SafeAreaView
@@ -37,7 +38,8 @@ return (
         onSelectedChange={({label, value}) => console.log(label)}
       />
     </SafeAreaView>
-  )}
+  )
+}
 ```
 
 #### Combine search
