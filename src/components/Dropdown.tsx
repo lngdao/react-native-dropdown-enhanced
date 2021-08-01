@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -14,34 +14,13 @@ import {
   FlatList,
   TouchableWithoutFeedback,
 } from 'react-native';
-
-export interface DropdownProps {
-  data: Array<Selected>;
-  defaultValue?: number | string;
-  onSelectedChange?: (selected: Selected) => void;
-  style?: StyleProp<ViewStyle>;
-  defaultLabel?: string;
-  itemStyle?: StyleProp<ViewStyle>;
-  itemTextStyle?: StyleProp<TextStyle>;
-  dropdownStyle?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
-  searchStyle?: StyleProp<TextStyle>;
-  searchable?: boolean;
-  searchPlaceholder?: string;
-  activeTextColor?: string;
-  inactiveTextColor?: string;
-}
+import { DropdownProps, Selected } from './Dropdown.props';
 
 type ContainerDimension = {
   width: number;
   height: number;
   px: number;
   py: number;
-};
-
-export type Selected = {
-  label: string;
-  value: number | string;
 };
 
 const SPACING = 10;
@@ -63,6 +42,8 @@ const Dropdown = (props: DropdownProps) => {
     searchPlaceholder = 'Type here',
     activeTextColor = 'orange',
     inactiveTextColor = 'black',
+    itemSeparatorComponent,
+    showsVerticalScrollIndicator = true,
   } = props;
 
   const [selected, setSelected] = useState<Selected>({
@@ -80,20 +61,29 @@ const Dropdown = (props: DropdownProps) => {
     });
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
   const [textSearch, setTextSearch] = useState<string>(data[0].label);
+  const [isCalculatingPostition, setIsCalculatingPosition] =
+    useState<boolean>(true);
+  const [currentOffset, setCurrentOffset] = useState<number | undefined>(
+    undefined
+  );
   const containerRef = useRef<View>(null);
   const inputRef = useRef<TextInput>(null);
+  const listRef = useRef<FlatList>(null);
+  const currentOffsetRef = useRef<number>(DEFAULT_VALUE);
 
   const handleOnLayout = () => {
-    containerRef.current?.measure((fx, fy, width, height, px, py) => {
-      console.log(fx, fy, width, height, px, py);
-      setContainerDimension((prev) => ({
-        ...prev,
-        width,
-        height,
-        px,
-        py,
-      }));
-    });
+    setTimeout(() => {
+      containerRef.current?.measure((fx, fy, width, height, px, py) => {
+        setContainerDimension((prev) => ({
+          ...prev,
+          width,
+          height,
+          px,
+          py,
+        }));
+      });
+    }, 0);
+    setIsCalculatingPosition(false);
   };
 
   const toggleDropdown = () => {
@@ -123,6 +113,17 @@ const Dropdown = (props: DropdownProps) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (dropdownVisible && currentOffset) {
+      setTimeout(() => {
+        listRef.current?.scrollToOffset({
+          offset: currentOffset,
+          animated: false,
+        });
+      }, 0);
+    }
+  }, [dropdownVisible]);
 
   useEffect(() => {
     // check default value
@@ -156,6 +157,7 @@ const Dropdown = (props: DropdownProps) => {
     return (
       <TouchableOpacity
         onPress={() => {
+          setCurrentOffset(currentOffsetRef.current);
           toggleDropdown();
           setSelected(item);
           !!onSelectedChange && onSelectedChange(item);
@@ -227,6 +229,13 @@ const Dropdown = (props: DropdownProps) => {
     );
   };
 
+  const keyExtractor = useCallback((_, index) => `${index}`, []);
+
+  const separatorComponent = useCallback(
+    () => itemSeparatorComponent || <View style={styles.separator} />,
+    []
+  );
+
   const renderDropdown = () => (
     <View
       pointerEvents={dropdownVisible ? undefined : 'none'}
@@ -245,11 +254,17 @@ const Dropdown = (props: DropdownProps) => {
       ]}
       children={
         <FlatList
+          ref={listRef}
           data={dataDropdown}
           renderItem={renderDropdownItem}
-          keyExtractor={(_, index) => `${index}`}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          keyExtractor={keyExtractor}
+          ItemSeparatorComponent={separatorComponent}
           scrollEventThrottle={16}
+          onScroll={(event) => {
+            currentOffsetRef.current = event.nativeEvent.contentOffset.y;
+          }}
+          initialNumToRender={data.length}
+          showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         />
       }
     />
@@ -258,6 +273,7 @@ const Dropdown = (props: DropdownProps) => {
   return (
     <View style={{ zIndex: 5, overflow: 'visible' }}>
       <TouchableWithoutFeedback
+        disabled={isCalculatingPostition}
         onPress={toggleDropdown}
         children={containerView()}
       />

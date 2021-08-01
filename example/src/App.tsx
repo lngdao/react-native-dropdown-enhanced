@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Text } from 'react-native'
 import { StyleSheet, SafeAreaView, ActivityIndicator, View } from 'react-native'
-import { getListDistrictCode, getNcovInformation } from './services/api/api'
+import { getListProvinceCode, getNcovInformation } from './services/api/api'
 import Dropdown, { Selected } from 'react-native-dropdown-enhanced'
 
-type DistrictPayload = {
+type ProvincePayload = {
   name: string
   'hec-key': number
 }
@@ -15,11 +15,11 @@ const App = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [information, setInformation] = useState<any>({})
 
-  const requestGetListDistrict = async () => {
-    const dataProvince = await (await fetch(getListDistrictCode)).json()
+  const requestGetListProvince = async () => {
+    const dataProvince = await (await fetch(getListProvinceCode)).json()
     const dataNcov = await (await fetch(getNcovInformation)).json()
     setListProvince(
-      dataProvince.key.map((item: DistrictPayload) => ({
+      dataProvince.key.map((item: ProvincePayload) => ({
         label: item.name.replace(/-/g, ' ').toUpperCase(),
         value: item['hec-key'],
       }))
@@ -36,7 +36,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    requestGetListDistrict()
+    requestGetListProvince()
   }, [])
 
   if (isLoading)
