@@ -5,11 +5,8 @@ import {
   Text,
   TouchableOpacity,
   Modal,
-  StyleProp,
-  ViewStyle,
   StyleSheet,
   TextInput,
-  TextStyle,
   Image,
   FlatList,
   TouchableWithoutFeedback,
@@ -44,6 +41,8 @@ const Dropdown = (props: DropdownProps) => {
     inactiveTextColor = 'black',
     itemSeparatorComponent,
     showsVerticalScrollIndicator = true,
+    delayCalcPosition = 200,
+    ...flatListProps
   } = props;
 
   const [selected, setSelected] = useState<Selected>({
@@ -82,7 +81,7 @@ const Dropdown = (props: DropdownProps) => {
           py,
         }));
       });
-    }, 0);
+    }, delayCalcPosition);
     setIsCalculatingPosition(false);
   };
 
@@ -265,6 +264,7 @@ const Dropdown = (props: DropdownProps) => {
           }}
           initialNumToRender={data.length}
           showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+          {...flatListProps}
         />
       }
     />

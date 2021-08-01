@@ -1,4 +1,4 @@
-import { StyleProp, TextStyle, ViewStyle } from "react-native";
+import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 export interface DropdownProps {
   data: Array<Selected>;
@@ -17,6 +17,7 @@ export interface DropdownProps {
   searchPlaceholder?: string;
   activeTextColor?: string;
   inactiveTextColor?: string;
+  delayCalcPosition?: number;
 }
 
 export type Selected = {
