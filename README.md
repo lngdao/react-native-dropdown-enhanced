@@ -16,7 +16,7 @@ A simply **dropdown** | **selected** | **picker** | **combine searchable** for r
 
 Code provided in **Example** folder.
 
-![Alt Text](https://media.giphy.com/media/23hSSFYlEwbxILFtGR/giphy.gif)  $~~~~~~~~~~~$  ![Alt Text](https://media.giphy.com/media/SNLvUS2gqO3DdOOiL3/giphy.gif)
+![Alt Text](https://media.giphy.com/media/23hSSFYlEwbxILFtGR/giphy.gif)   ![Alt Text](https://media.giphy.com/media/SNLvUS2gqO3DdOOiL3/giphy.gif)
 
 ## Usage
 
