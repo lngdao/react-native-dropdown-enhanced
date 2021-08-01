@@ -1,6 +1,6 @@
 {
   "name": "react-native-dropdown-enhanced",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "A simply dropdown combine searchable for react native that works both for IOS and Android.",
   "homepage": "https://github.com/dthlg/react-native-dropdown-enhanced#readme",
   "main": "lib/index.js",
