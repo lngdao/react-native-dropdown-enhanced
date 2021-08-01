@@ -290,7 +290,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#CED4DA',
     borderWidth: 1,
-    width: 200,
     height: 50,
     padding: SPACING,
   },
