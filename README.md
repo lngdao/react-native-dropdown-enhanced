@@ -16,7 +16,7 @@ A simply **dropdown** | **selected** | **picker** | **combine searchable** for r
 
 Code provided in **Example** folder.
 
-<img src="https://media.giphy.com/media/23hSSFYlEwbxILFtGR/giphy.gif" width="18%"></img>   <img src="https://media.giphy.com/media/SNLvUS2gqO3DdOOiL3/giphy.gif" width="18%"></img>
+<img src="https://media.giphy.com/media/23hSSFYlEwbxILFtGR/giphy.gif" width="23%"></img>   <img src="https://media.giphy.com/media/SNLvUS2gqO3DdOOiL3/giphy.gif" width="23%"></img>
 
 ## Usage
 
