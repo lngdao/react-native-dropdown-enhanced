@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import * as React from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   View,
   Text,
@@ -10,18 +10,19 @@ import {
   Image,
   FlatList,
   TouchableWithoutFeedback,
-} from 'react-native';
-import { DropdownProps, Selected } from './Dropdown.props';
+  ListRenderItem,
+} from 'react-native'
+import { DropdownProps, Selected } from './Dropdown.props'
 
 type ContainerDimension = {
-  width: number;
-  height: number;
-  px: number;
-  py: number;
-};
+  width: number
+  height: number
+  px: number
+  py: number
+}
 
-const SPACING = 10;
-const DEFAULT_VALUE = 0;
+const SPACING = 10
+const DEFAULT_VALUE = 0
 
 const Dropdown = (props: DropdownProps) => {
   const {
@@ -40,78 +41,81 @@ const Dropdown = (props: DropdownProps) => {
     activeTextColor = 'orange',
     inactiveTextColor = 'black',
     itemSeparatorComponent,
-    showsVerticalScrollIndicator = true,
+    showDropIcon = true,
+    separatorStyle,
+    showTickIcon = false,
+    tickIconStyle,
     delayCalcPosition = 200,
     ...flatListProps
-  } = props;
+  } = props
 
   const [selected, setSelected] = useState<Selected>({
     label: defaultLabel,
     value: '',
-  });
-  const [dataDropdown, setDataDropdown] = useState<Array<Selected>>(data);
-  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  })
+  const [dataDropdown, setDataDropdown] = useState<Array<Selected>>(data)
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false)
   const [containerDimension, setContainerDimension] =
     React.useState<ContainerDimension>({
       width: DEFAULT_VALUE,
       height: DEFAULT_VALUE,
       px: DEFAULT_VALUE,
       py: DEFAULT_VALUE,
-    });
-  const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
-  const [textSearch, setTextSearch] = useState<string>(data[0].label);
+    })
+  const [isSearchActive, setIsSearchActive] = useState<boolean>(false)
+  const [textSearch, setTextSearch] = useState<string>(data[0].label)
   const [isCalculatingPostition, setIsCalculatingPosition] =
-    useState<boolean>(true);
+    useState<boolean>(true)
   const [currentOffset, setCurrentOffset] = useState<number | undefined>(
     undefined
-  );
-  const containerRef = useRef<View>(null);
-  const inputRef = useRef<TextInput>(null);
-  const listRef = useRef<FlatList>(null);
-  const currentOffsetRef = useRef<number>(DEFAULT_VALUE);
+  )
+  const containerRef = useRef<View>(null)
+  const inputRef = useRef<TextInput>(null)
+  const listRef = useRef<FlatList>(null)
+  const currentOffsetRef = useRef<number>(DEFAULT_VALUE)
 
   const handleOnLayout = () => {
     setTimeout(() => {
       containerRef.current?.measure((fx, fy, width, height, px, py) => {
-        setContainerDimension((prev) => ({
+        setContainerDimension(prev => ({
           ...prev,
           width,
           height,
           px,
           py,
-        }));
-      });
-    }, delayCalcPosition);
-    setIsCalculatingPosition(false);
-  };
+        }))
+      })
+    }, delayCalcPosition)
+    setIsCalculatingPosition(false)
+  }
 
   const toggleDropdown = () => {
     if (searchable) {
-      setTextSearch(selected.label);
-      setIsSearchActive(!dropdownVisible);
+      setTextSearch(selected.label)
+      setIsSearchActive(!dropdownVisible)
     }
-    setDropdownVisible((prev) => !prev);
-  };
+    setDropdownVisible(prev => !prev)
+  }
 
   const onSearch = (text: string) => {
-    setTextSearch(text);
-    var matchingData = data.filter((item) => item.label.search(text) != -1);
-    setDataDropdown(matchingData);
-  };
+    setTextSearch(text)
+    var matchingData = data.filter(item => item.label.search(text) != -1)
+    setDataDropdown(matchingData)
+  }
 
   const checkDefaultValue = () => {
     if (defaultValue) {
-      let target = data.find((item) => item.value == defaultValue);
+      let target = data.find(item => item.value == defaultValue)
 
       if (target) {
-        setSelected((prev) => ({
+        setSelected(prev => ({
           ...prev,
           label: target!.label,
           value: defaultValue,
-        }));
+        }))
       }
     }
-  };
+  }
 
   useEffect(() => {
     if (dropdownVisible && currentOffset) {
@@ -119,23 +123,17 @@ const Dropdown = (props: DropdownProps) => {
         listRef.current?.scrollToOffset({
           offset: currentOffset,
           animated: false,
-        });
-      }, 0);
+        })
+      }, 0)
     }
-  }, [dropdownVisible]);
+  }, [dropdownVisible])
 
   useEffect(() => {
     // check default value
-    checkDefaultValue();
-  }, []);
+    checkDefaultValue()
+  }, [])
 
-  const renderDropdownItem = ({
-    item,
-    index,
-  }: {
-    item: Selected;
-    index: number;
-  }) => {
+  const renderDropdownItem: ListRenderItem<Selected> = ({ item }) => {
     const dropdownItemView = (
       <View style={[styles.dropdownItem, itemStyle]}>
         <Text
@@ -150,23 +148,29 @@ const Dropdown = (props: DropdownProps) => {
           ]}
           children={item.label}
         />
+        {selected.value == item.value && showTickIcon && (
+          <Image
+            style={[styles.tickIcon, tickIconStyle]}
+            source={require('../assets/ic_tick.png')}
+          />
+        )}
       </View>
-    );
+    )
 
     return (
       <TouchableOpacity
         onPress={() => {
-          setCurrentOffset(currentOffsetRef.current);
-          toggleDropdown();
-          setSelected(item);
-          !!onSelectedChange && onSelectedChange(item);
-          searchable && setIsSearchActive(false);
-          searchable && setDataDropdown(data);
+          setCurrentOffset(currentOffsetRef.current)
+          toggleDropdown()
+          setSelected(item)
+          !!onSelectedChange && onSelectedChange(item)
+          searchable && setIsSearchActive(false)
+          searchable && setDataDropdown(data)
         }}
         children={dropdownItemView}
       />
-    );
-  };
+    )
+  }
 
   const containerView = () => {
     const containerChild =
@@ -186,7 +190,7 @@ const Dropdown = (props: DropdownProps) => {
           numberOfLines={1}
           children={selected.label}
         />
-      );
+      )
 
     return (
       <View
@@ -195,16 +199,18 @@ const Dropdown = (props: DropdownProps) => {
         style={[styles.containerStyle, style]}
       >
         {containerChild}
-        <Image
-          style={[
-            styles.ic_arrow,
-            { transform: [{ rotate: dropdownVisible ? '180deg' : '0deg' }] },
-          ]}
-          source={require('../assets/ic_arrow_down.png')}
-        />
+        {showDropIcon && (
+          <Image
+            style={[
+              styles.ic_arrow,
+              { transform: [{ rotate: dropdownVisible ? '180deg' : '0deg' }] },
+            ]}
+            source={require('../assets/ic_arrow_down.png')}
+          />
+        )}
       </View>
-    );
-  };
+    )
+  }
 
   const dropdownWrapper = (cpn: JSX.Element) => {
     return !searchable ? (
@@ -225,15 +231,18 @@ const Dropdown = (props: DropdownProps) => {
       </Modal>
     ) : (
       cpn
-    );
-  };
+    )
+  }
 
-  const keyExtractor = useCallback((_, index) => `${index}`, []);
+  const keyExtractor = useCallback((_, index) => `${index}`, [])
 
   const separatorComponent = useCallback(
-    () => itemSeparatorComponent || <View style={styles.separator} />,
+    () =>
+      itemSeparatorComponent || (
+        <View style={[styles.separator, separatorStyle]} />
+      ),
     []
-  );
+  )
 
   const renderDropdown = () => (
     <View
@@ -259,19 +268,18 @@ const Dropdown = (props: DropdownProps) => {
           keyExtractor={keyExtractor}
           ItemSeparatorComponent={separatorComponent}
           scrollEventThrottle={16}
-          onScroll={(event) => {
-            currentOffsetRef.current = event.nativeEvent.contentOffset.y;
+          onScroll={event => {
+            currentOffsetRef.current = event.nativeEvent.contentOffset.y
           }}
           initialNumToRender={data.length}
-          showsVerticalScrollIndicator={showsVerticalScrollIndicator}
           {...flatListProps}
         />
       }
     />
-  );
+  )
 
   return (
-    <View style={{ zIndex: 5, overflow: 'visible' }}>
+    <View style={{ zIndex: 5, overflow: 'visible', flex: 1 }}>
       <TouchableWithoutFeedback
         disabled={isCalculatingPostition}
         onPress={toggleDropdown}
@@ -279,8 +287,8 @@ const Dropdown = (props: DropdownProps) => {
       />
       {dropdownWrapper(renderDropdown())}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -322,6 +330,9 @@ const styles = StyleSheet.create({
   },
   dropdownItem: {
     padding: SPACING,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   separator: {
     flex: 1,
@@ -329,6 +340,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#CED4DA',
     marginHorizontal: SPACING,
   },
-});
+  tickIcon: {
+    width: 17,
+    height: 17,
+    tintColor: 'orange',
+  },
+})
 
-export default Dropdown;
+export default Dropdown

@@ -56,6 +56,7 @@ const App = () => {
           labelStyle={styles.text}
           style={{ height: 40, borderWidth: 0, borderBottomWidth: 1 }}
           onSelectedChange={onSelected}
+          showTickIcon
         />
       </View>
       <View style={[styles.centerStyle, { zIndex: -1 }]}>
