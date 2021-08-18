@@ -279,7 +279,7 @@ const Dropdown = (props: DropdownProps) => {
   )
 
   return (
-    <View style={{ zIndex: 5, overflow: 'visible', flex: 1 }}>
+    <View style={{ zIndex: 5, overflow: 'visible' }}>
       <TouchableWithoutFeedback
         disabled={isCalculatingPostition}
         onPress={toggleDropdown}
