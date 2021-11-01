@@ -22,7 +22,7 @@ Code provided in **Example** folder.
 
 #### Simple usage
 
-```
+```js
 const data: Selected[] = [
   {label: 'Ha Noi', value: 10},
   {label: 'Ho Chi Minh', value: 11},
@@ -48,7 +48,7 @@ return (
 
 #### Combine search
 
-```
+```js
 const App = () => {
   return (
     <SafeAreaView
