@@ -10,7 +10,7 @@ A simply **dropdown** | **selected** | **picker** | **combine searchable** for r
 
 ### # Using npm
 
-     npm add react-native-dropdown-enhanced
+     npm i react-native-dropdown-enhanced
 
 ## Demo
 
